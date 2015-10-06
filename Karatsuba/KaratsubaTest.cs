@@ -37,6 +37,8 @@ namespace Karatsuba
 
             Assert.AreEqual(new BigInteger[] { 12, 345 }, Karatsuba.Split(12345, 3));
             Assert.AreEqual(new BigInteger[] { 10, 0 }, Karatsuba.Split(10000, 3));
+
+            Assert.AreEqual(new BigInteger[] { 12345, 6789}, Karatsuba.Split(123456789, 4));
         }
 
 
