@@ -9,18 +9,9 @@ namespace MergeSort
     {
         public static IEnumerable<T> Sort(IEnumerable<T> numbers)
         {
-            var list = numbers as IList<T> ?? numbers.ToList();
-            var size = list.Count;
-
-            if (size < 2)
-                return list;
-
-            var left = list.Take(size/2);
-            var right = list.Skip(size/2);
-
-            var sortedLeft = Sort(left);
-            var sortedRight = Sort(right);
-            return Merge(sortedLeft, sortedRight);
+            IEnumerable<T> sorted;
+            CountInversions(numbers, out sorted);
+            return sorted;
         }
 
         public static int CountInversions(IEnumerable<T> numbers)
