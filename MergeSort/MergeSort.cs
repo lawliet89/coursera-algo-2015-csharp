@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MergeSort
 {
-    public static class MergeSort
+    public static class MergeSort<T> where T : IComparable<T>
     {
-        public static IEnumerable<T> Sort<T>(IEnumerable<T> numbers)
-            where T: IComparable<T>
+        public static IEnumerable<T> Sort(IEnumerable<T> numbers)
         {
             var list = numbers as IList<T> ?? numbers.ToList();
             var size = list.Count;
@@ -23,15 +23,43 @@ namespace MergeSort
             return Merge(sortedLeft, sortedRight);
         }
 
-        public static IEnumerable<T> Merge<T>(IEnumerable<T> left, IEnumerable<T> right)
-            where T : IComparable<T>
+        public static int CountInversions(IEnumerable<T> numbers)
+        {
+            IEnumerable<T> _; // We are going to throw this away
+            return CountInversions(numbers, out _);
+        }
+
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public static int CountInversions(IEnumerable<T> numbers, out IEnumerable<T> sortedNumbers)
+        {
+            var list = numbers as IList<T> ?? numbers.ToList();
+            var size = list.Count;
+
+            if (size == 1)
+            {
+                sortedNumbers = numbers;
+                return 0;
+            }
+
+            var left = list.Take(size/2);
+            var right = list.Skip(size/2);
+
+            IEnumerable<T> sortedLeft, sortedRight;
+            var leftInversion = CountInversions(left, out sortedLeft);
+            var rightInversion = CountInversions(right, out sortedRight);
+            int splitInversion;
+            sortedNumbers = Merge(sortedLeft, sortedRight, out splitInversion);
+
+            return leftInversion + rightInversion + splitInversion;
+        }
+
+        public static IEnumerable<T> Merge(IEnumerable<T> left, IEnumerable<T> right)
         {
             int _; // We are throwing this away
             return Merge(left, right, out _);
         }
 
-        public static IEnumerable<T> Merge<T>(IEnumerable<T> left, IEnumerable<T> right, out int splitInversionCount)
-            where T : IComparable<T>
+        public static IEnumerable<T> Merge(IEnumerable<T> left, IEnumerable<T> right, out int splitInversionCount)
         {
             splitInversionCount = 0;
 
