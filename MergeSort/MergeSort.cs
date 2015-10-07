@@ -46,7 +46,7 @@ namespace MergeSort
                         result.Add(leftIterator.Current);
                         leftHasNext = leftIterator.MoveNext();
                     }
-                    // i.e. left < right
+                    // i.e. left <= right
                     else if (leftIterator.Current.CompareTo(rightIterator.Current) <= 0)
                     {
                         result.Add(leftIterator.Current);
