@@ -35,7 +35,7 @@ namespace MergeSort
             var list = numbers as IList<T> ?? numbers.ToList();
             var size = list.Count;
 
-            if (size == 1)
+            if (size < 2)
             {
                 sortedNumbers = numbers;
                 return 0;
