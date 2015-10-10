@@ -14,14 +14,14 @@ namespace MergeSort
             return sorted;
         }
 
-        public static int CountInversions(IEnumerable<T> numbers)
+        public static long CountInversions(IEnumerable<T> numbers)
         {
             IEnumerable<T> _; // We are going to throw this away
             return CountInversions(numbers, out _);
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static int CountInversions(IEnumerable<T> numbers, out IEnumerable<T> sortedNumbers)
+        public static long CountInversions(IEnumerable<T> numbers, out IEnumerable<T> sortedNumbers)
         {
             var list = numbers as IList<T> ?? numbers.ToList();
             var size = list.Count;
@@ -38,7 +38,7 @@ namespace MergeSort
             IEnumerable<T> sortedLeft, sortedRight;
             var leftInversion = CountInversions(left, out sortedLeft);
             var rightInversion = CountInversions(right, out sortedRight);
-            int splitInversion;
+            long splitInversion;
             sortedNumbers = Merge(sortedLeft, sortedRight, out splitInversion);
 
             return leftInversion + rightInversion + splitInversion;
@@ -46,11 +46,11 @@ namespace MergeSort
 
         public static IEnumerable<T> Merge(IEnumerable<T> left, IEnumerable<T> right)
         {
-            int _; // We are throwing this away
+            long _; // We are throwing this away
             return Merge(left, right, out _);
         }
 
-        public static IEnumerable<T> Merge(IEnumerable<T> left, IEnumerable<T> right, out int splitInversionCount)
+        public static IEnumerable<T> Merge(IEnumerable<T> left, IEnumerable<T> right, out long splitInversionCount)
         {
             splitInversionCount = 0;
 
