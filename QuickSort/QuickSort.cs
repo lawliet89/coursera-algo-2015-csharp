@@ -6,7 +6,7 @@ namespace QuickSort
 {
     public static class QuickSort
     {
-        private enum PivotChoice
+        public enum PivotChoice
         {
             First, Last, Median, Random
         }
@@ -36,27 +36,14 @@ namespace QuickSort
         }
 
         // Returns the number of comparisons
-        private static long Sort<T>(IList<T> list, PivotChoice pivotChoice, int firstIndex, int lastIndex)
+        public static long Sort<T>(IList<T> list, PivotChoice pivotChoice, int firstIndex, int lastIndex)
             where T : IComparable<T>
         {
             var length = lastIndex - firstIndex;
             if (length < 2)
                 return 0;
 
-            var pivotIndex = firstIndex;
-            switch (pivotChoice)
-            {
-                case PivotChoice.Last:
-                    pivotIndex = lastIndex - 1;
-                    break;
-                case PivotChoice.Median:
-                    pivotIndex = firstIndex + Convert.ToInt32(Math.Round(length/2.0));
-                    break;
-                case PivotChoice.Random:
-                    // Unimplemented
-                    break;
-            }
-
+            var pivotIndex = ChoosePivot(pivotChoice, firstIndex, lastIndex);
             if (pivotIndex != firstIndex)
             {
                 list = list.Swap(pivotIndex, firstIndex);
@@ -79,6 +66,25 @@ namespace QuickSort
             count += Sort(list, pivotChoice, firstIndex + i, lastIndex);
 
             return count;
+        }
+
+        public static int ChoosePivot(PivotChoice pivotChoice, int firstIndex, int lastIndex)
+        {
+            var pivotIndex = firstIndex;
+            var length = lastIndex - firstIndex;
+            switch (pivotChoice)
+            {
+                case PivotChoice.Last:
+                    pivotIndex = lastIndex - 1;
+                    break;
+                case PivotChoice.Median:
+                    pivotIndex = firstIndex + Convert.ToInt32(Math.Ceiling(length / 2.0)) - 1 ; 
+                    break;
+                case PivotChoice.Random:
+                    // Unimplemented
+                    break;
+            }
+            return pivotIndex;
         }
     }
 }

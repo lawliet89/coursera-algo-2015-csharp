@@ -11,5 +11,10 @@ namespace Utilities
             list[indexB] = tmp;
             return list;
         }
+
+        public static IList<T> Copy<T>(this IList<T> list)
+        {
+            return new List<T>(list);
+        }
     }
 }
