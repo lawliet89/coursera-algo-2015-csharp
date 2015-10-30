@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Utilities;
 
 namespace QuickSort
@@ -43,7 +44,7 @@ namespace QuickSort
             if (length < 2)
                 return 0;
 
-            var pivotIndex = ChoosePivot(pivotChoice, firstIndex, lastIndex);
+            var pivotIndex = ChoosePivot(list, pivotChoice, firstIndex, lastIndex);
             if (pivotIndex != firstIndex)
             {
                 list = list.Swap(pivotIndex, firstIndex);
@@ -53,7 +54,7 @@ namespace QuickSort
             var i = 1;
             for (var j = 1; j < length; ++j)
             {
-                if (list[firstIndex + j].CompareTo(pivot) < 1)
+                if (list[firstIndex + j].CompareTo(pivot) < 0)
                 {
                     list.Swap(firstIndex + j, firstIndex + i);
                     ++i;
@@ -68,7 +69,8 @@ namespace QuickSort
             return count;
         }
 
-        public static int ChoosePivot(PivotChoice pivotChoice, int firstIndex, int lastIndex)
+        private static int ChoosePivot<T>(IList<T> list, PivotChoice pivotChoice, int firstIndex, int lastIndex)
+            where T : IComparable<T>
         {
             var pivotIndex = firstIndex;
             var length = lastIndex - firstIndex;
@@ -78,7 +80,9 @@ namespace QuickSort
                     pivotIndex = lastIndex - 1;
                     break;
                 case PivotChoice.Median:
-                    pivotIndex = firstIndex + Convert.ToInt32(Math.Ceiling(length / 2.0)) - 1 ; 
+                    var mediumIndex = firstIndex + Convert.ToInt32(Math.Ceiling(length / 2.0)) - 1 ;
+                    var selection = new[] {firstIndex, lastIndex - 1, mediumIndex};
+                    pivotIndex = selection.OrderBy(i => list[i]).Skip(1).First();
                     break;
                 case PivotChoice.Random:
                     // Unimplemented

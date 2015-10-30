@@ -13,6 +13,19 @@ namespace QuickSort
             new []{ 5, 2, 10, 8, 1, 9, 4, 3, 6, 7 }
         };
 
+        public static IList<int> TenNumbers = new[]
+        {
+            3, 9, 8, 4, 6, 10, 2, 5, 7, 1
+        };
+
+        public static IList<int> HundredNumbers = new[]
+        {
+            57, 97, 17, 31, 54, 98, 87, 27, 89, 81, 18, 70, 3, 34, 63, 100, 46, 30, 99, 10, 33, 65, 96, 38, 48, 80, 95,
+            6, 16, 19, 56, 61, 1, 47, 12, 73, 49, 41, 37, 40, 59, 67, 93, 26, 75, 44, 58, 66, 8, 55, 94, 74, 83, 7, 15,
+            86, 42, 50, 5, 22, 90, 13, 69, 53, 43, 24, 92, 51, 23, 39, 78, 85, 4, 25, 52, 36, 60, 68, 9, 64, 79, 14, 45,
+            2, 77, 84, 11, 71, 35, 72, 28, 76, 82, 88, 32, 21, 20, 91, 62, 29
+        };
+
         public static IList<int> ThousandNumbers = new[]
         {
             448, 109, 797, 189, 115, 284, 599, 103, 171, 815, 141, 949, 323, 390, 605, 362, 824, 144, 576, 540, 665, 985,
@@ -87,28 +100,32 @@ namespace QuickSort
             CollectionAssert.IsOrdered(actualList);
         }
 
-        [Test]
-        public void ChoosePivotChoosesCorrectly()
+        [TestCase(QuickSort.PivotChoice.First, Result = 25)]
+        [TestCase(QuickSort.PivotChoice.Last, Result = 29)]
+        [TestCase(QuickSort.PivotChoice.Median, Result = 21)]
+        public long CountsComparisonsCorrectlyTen(QuickSort.PivotChoice pivotChoice)
         {
-            // First
-            Assert.AreEqual(0, QuickSort.ChoosePivot(QuickSort.PivotChoice.First, 0, 999));
-            Assert.AreEqual(123, QuickSort.ChoosePivot(QuickSort.PivotChoice.First, 123, 999));
+            var actualList = TenNumbers.Copy();
+            var count = QuickSort.Sort(actualList, pivotChoice, 0, actualList.Count);
+            CollectionAssert.IsOrdered(actualList);
+            return count;
+        }
 
-            // Last
-            Assert.AreEqual(998, QuickSort.ChoosePivot(QuickSort.PivotChoice.Last, 0, 999));
-            Assert.AreEqual(998, QuickSort.ChoosePivot(QuickSort.PivotChoice.Last, 123, 999));
-
-            // Median
-            Assert.AreEqual(1, QuickSort.ChoosePivot(QuickSort.PivotChoice.Median, 0, 4));
-            Assert.AreEqual(1, QuickSort.ChoosePivot(QuickSort.PivotChoice.Median, 0, 3));
-            Assert.AreEqual(499, QuickSort.ChoosePivot(QuickSort.PivotChoice.Median, 0, 999));
-            Assert.AreEqual(560, QuickSort.ChoosePivot(QuickSort.PivotChoice.Median, 123, 999));
+        [TestCase(QuickSort.PivotChoice.First, Result = 615)]
+        [TestCase(QuickSort.PivotChoice.Last, Result = 587)]
+        [TestCase(QuickSort.PivotChoice.Median, Result = 518)]
+        public long CountsComparisonsCorrectlyHundred(QuickSort.PivotChoice pivotChoice)
+        {
+            var actualList = HundredNumbers.Copy();
+            var count = QuickSort.Sort(actualList, pivotChoice, 0, actualList.Count);
+            CollectionAssert.IsOrdered(actualList);
+            return count;
         }
 
         [TestCase(QuickSort.PivotChoice.First, Result = 10297)]
         [TestCase(QuickSort.PivotChoice.Last, Result = 10184)]
         [TestCase(QuickSort.PivotChoice.Median, Result = 8921)]
-        public long CountsComparisonsCorrectly(QuickSort.PivotChoice pivotChoice)
+        public long CountsComparisonsCorrectlyThousand(QuickSort.PivotChoice pivotChoice)
         {
             var actualList = ThousandNumbers.Copy();
             var count = QuickSort.Sort(actualList, pivotChoice, 0, actualList.Count);

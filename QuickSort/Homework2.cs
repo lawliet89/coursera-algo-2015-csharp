@@ -12,7 +12,7 @@ namespace QuickSort
                 $"{AppDomain.CurrentDomain.BaseDirectory}/../../../Blobs/QuickSort.txt").ToList();
             Console.WriteLine("First Pivot: {0}", QuickSort.SortPivotFirst(integers.Copy())); // 162085
             Console.WriteLine("Last Pivot: {0}", QuickSort.SortPivotLast(integers.Copy())); // 164123
-            Console.WriteLine("Median Pivot: {0}", QuickSort.SortPivotMedian(integers.Copy())); // 149130
+            Console.WriteLine("Median Pivot: {0}", QuickSort.SortPivotMedian(integers.Copy())); // 138382
             Console.WriteLine("Press ENTER to exit.");
             Console.ReadLine();
             return 0;
