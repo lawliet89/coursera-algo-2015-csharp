@@ -26,6 +26,8 @@ namespace Utilities.Graphs
                 var right = edge.Right;
 
                 graph.Vertices.Remove(right.Name);
+                left.SuperVertices.AddRange(right.SuperVertices);
+
                 foreach (var loop in graph.Edges.Where(e => e.HasVertices(left, right)).ToList())
                 {
                     graph.Edges.Remove(loop);
@@ -40,8 +42,6 @@ namespace Utilities.Graphs
                 {
                     danglingEdge.Right = left;
                 }
-
-//                left.Name = left.Name + $" {right.Name}";
             }
             return graph;
         }
@@ -121,11 +121,18 @@ namespace Utilities.Graphs
         {
             public string Name { get; set; }
             public List<Edge> Edges { get; }
+            public List<Vertex> SuperVertices { get; set; }
 
             public Vertex(string name)
             {
                 Name = name;
                 Edges = new List<Edge>();
+                SuperVertices = new List<Vertex> {this};
+            }
+
+            public override string ToString()
+            {
+                return string.Join(" ", SuperVertices.Select(v => v.Name));
             }
         }
 

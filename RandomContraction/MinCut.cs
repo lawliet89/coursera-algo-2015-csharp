@@ -13,10 +13,10 @@ namespace RandomContraction
             Console.ReadLine();
         }
 
-        public static long MinimumCutFromFile(string path)
+        public static long MinimumCutFromFile(string path, int count = 100)
         {
             var minCut = long.MaxValue;
-            for (var i = 0; i < 100; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var graph =
                     UndirectedGraph.MakeGraphFromFile(
