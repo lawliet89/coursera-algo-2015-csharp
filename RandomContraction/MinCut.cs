@@ -8,7 +8,7 @@ namespace RandomContraction
         static void Main(string[] args)
         {
             var minCut = MinimumCutFromFile("kargerMinCut.txt");
-            Console.WriteLine("Minimum Cut is probably: {0}", minCut);
+            Console.WriteLine("Minimum Cut is probably: {0}", minCut); // Answer is 17
             Console.WriteLine("Press ENTER to exit.");
             Console.ReadLine();
         }
@@ -23,10 +23,10 @@ namespace RandomContraction
                         $"{AppDomain.CurrentDomain.BaseDirectory}/../../../Blobs/{path}");
                 var contracted = UndirectedGraph.RandomContraction(graph);
                 var noEdges = contracted.Edges.Count;
-                Console.WriteLine("Attempt {0}: {1} edges", i, noEdges);
+//                Console.WriteLine("Attempt {0}: {1} edges", i, noEdges);
                 if (noEdges < minCut)
                 {
-                    Console.WriteLine("\tNew Minimum!");
+                    Console.WriteLine($"New Minimum: {noEdges} (#{i})");
                     minCut = noEdges;
                 }
             }

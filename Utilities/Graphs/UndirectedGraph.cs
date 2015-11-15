@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 
 namespace Utilities.Graphs
 {
@@ -25,7 +25,7 @@ namespace Utilities.Graphs
                 var left = edge.Left;
                 var right = edge.Right;
 
-                graph.Vertices.Remove(right.Name);
+                Assert.IsTrue(graph.Vertices.Remove(right.Name));
                 left.SuperVertices.AddRange(right.SuperVertices);
 
                 foreach (var loop in graph.Edges.Where(e => e.HasVertices(left, right)).ToList())
@@ -42,6 +42,10 @@ namespace Utilities.Graphs
                 {
                     danglingEdge.Right = left;
                 }
+
+                // Some assertions
+                Assert.IsEmpty(graph.Edges.Where(e => e.HasVertices(left, right)));
+                Assert.IsEmpty(graph.Edges.Where(e => e.Left == right || e.Right == right));
             }
             return graph;
         }

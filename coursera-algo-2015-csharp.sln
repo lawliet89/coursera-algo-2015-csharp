@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickSort", "QuickSort\Quic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomContraction", "RandomContraction\RandomContraction.csproj", "{354B879C-D624-4ACF-8A8B-A4D992DAF605}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCC", "SCC\SCC.csproj", "{A00EA4A4-6FC7-41A8-B5DD-A5681802429D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{354B879C-D624-4ACF-8A8B-A4D992DAF605}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{354B879C-D624-4ACF-8A8B-A4D992DAF605}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{354B879C-D624-4ACF-8A8B-A4D992DAF605}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A00EA4A4-6FC7-41A8-B5DD-A5681802429D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A00EA4A4-6FC7-41A8-B5DD-A5681802429D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A00EA4A4-6FC7-41A8-B5DD-A5681802429D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A00EA4A4-6FC7-41A8-B5DD-A5681802429D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
