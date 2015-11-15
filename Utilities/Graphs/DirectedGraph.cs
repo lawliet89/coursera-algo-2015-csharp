@@ -15,46 +15,21 @@ namespace Utilities.Graphs
             Edges = new List<Edge>();
         }
 
-        public void Cache()
-        {
-            foreach (var node in Nodes.Values)
-            {
-                node.CacheEdges();
-            }
-        }
-
         public class Node
         {
             public TName Name { get; set; }
             public DirectedGraph<TName> Graph { get; }
 
+            public List<Edge> IncomingEdges { get; }
+            public List<Edge> OutgoingEdges { get; }
+
             public Node(DirectedGraph<TName> graph)
             {
                 Graph = graph;
-                OutgoingEdgesCached = new List<Edge>();
-                IncomingEdgesCached = new List<Edge>();
+                OutgoingEdges = new List<Edge>();
+                IncomingEdges = new List<Edge>();
             }
-
-            public void CacheEdges()
-            {
-                OutgoingEdgesCached = OutgoingEdges.ToList();
-                IncomingEdgesCached = IncomingEdges.ToList();
-            }
-
-            public IEnumerable<Edge> OutgoingEdges
-            {
-                get { return Graph.Edges.Where(e => e.Tail == this); }
-            }
-
-            public IEnumerable<Edge> IncomingEdges
-            {
-                get { return Graph.Edges.Where(e => e.Head == this); }
-            }
-
-
-            public List<Edge> OutgoingEdgesCached { get; private set; }
-            public List<Edge> IncomingEdgesCached { get; private set; }
-
+           
             public IEnumerable<Node> OutgoingNodes
             {
                 get { return OutgoingEdges.Select(e => e.Head).Distinct(); }

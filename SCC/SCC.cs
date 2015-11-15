@@ -66,8 +66,10 @@ namespace SCC
 
                 var edge = new DirectedGraph<int>.Edge(tail, head);
                 graph.Edges.Add(edge);
+
+                tail.OutgoingEdges.Add(edge);
+                head.IncomingEdges.Add(edge);
             }
-            graph.Cache();
             return graph;
         }
 
@@ -132,8 +134,8 @@ namespace SCC
             nodeMetadata.Leader = leader;
 
             var edges = direction == EdgeDirection.Forward
-                ? node.OutgoingEdgesCached
-                : node.IncomingEdgesCached;
+                ? node.OutgoingEdges
+                : node.IncomingEdges;
 
             foreach (var edge in edges)
             {
