@@ -105,50 +105,64 @@ namespace SCC
 
             foreach (var node in nodes)
             {
-                if (visitedNodes.Add(node))
-                {
-                    finishingTime = DFS(node, visitedNodes, metadata, node, finishingTime, direction);
-                }
+                finishingTime = DFS(node, visitedNodes, metadata, finishingTime, direction);
             }
 
             return metadata;
         }
 
-        private static int DFS(DirectedGraph<int>.Node node, 
+        private static int DFS(DirectedGraph<int>.Node leader, 
             ISet<DirectedGraph<int>.Node> visitedNodes, Dictionary<int, NodeMetadata> metadata, 
-            DirectedGraph<int>.Node leader, int finishingTime, EdgeDirection direction)
+            int finishingTime, EdgeDirection direction)
         {
-            NodeMetadata nodeMetadata;
-            if (!metadata.ContainsKey(node.Name))
-            {
-                nodeMetadata = new NodeMetadata()
-                {
-                    Node = node
-                };
-                metadata.Add(node.Name, nodeMetadata);
-            }
-            else
-            {
-                nodeMetadata = metadata[node.Name];
-            }
-            nodeMetadata.Leader = leader;
+            if (!visitedNodes.Add(leader))
+                return finishingTime;
 
-            var edges = direction == EdgeDirection.Forward
-                ? node.OutgoingEdges
-                : node.IncomingEdges;
+            var searchStack = new Stack<DirectedGraph<int>.Node>();
+            searchStack.Push(leader);
 
-            foreach (var edge in edges)
+            while (searchStack.Count > 0)
             {
-                var endNode = direction == EdgeDirection.Forward
-                    ? edge.Head
-                    : edge.Tail;
-                if (visitedNodes.Add(endNode))
+                var node = searchStack.Peek();
+                NodeMetadata nodeMetadata;
+                if (!metadata.ContainsKey(node.Name))
                 {
-                    finishingTime = DFS(endNode, visitedNodes, metadata, leader, finishingTime, direction);
+                    nodeMetadata = new NodeMetadata()
+                    {
+                        Node = node
+                    };
+                    metadata.Add(node.Name, nodeMetadata);
+                }
+                else
+                {
+                    nodeMetadata = metadata[node.Name];
+                }
+                nodeMetadata.Leader = leader;
+
+                var edges = direction == EdgeDirection.Forward
+                    ? node.OutgoingEdges
+                    : node.IncomingEdges;
+
+                var edge = edges.FirstOrDefault(e => !visitedNodes.Contains(direction == EdgeDirection.Forward ? e.Head : e.Tail));
+                if (edge == null)
+                {
                     finishingTime++;
                     nodeMetadata.FinishingTime = finishingTime;
+                    searchStack.Pop();
                 }
+                else
+                {
+                    var endNode = direction == EdgeDirection.Forward
+                            ? edge.Head
+                            : edge.Tail;
+                    if (visitedNodes.Add(endNode))
+                    {
+                        searchStack.Push(endNode);
+                    }
+                }
+
             }
+            
             return finishingTime;
         }
 
