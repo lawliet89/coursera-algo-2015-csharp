@@ -24,7 +24,7 @@ namespace SCC
                     sccSizes.Add(0);
                 }
             }
-            Console.WriteLine("Answer: {0}", string.Join(",", sccSizes));
+            Console.WriteLine("Answer: {0}", string.Join(",", sccSizes)); // 434821,968,459,313,211
             Console.WriteLine("Press ENTER to exit.");
             Console.ReadLine();
         }
@@ -76,10 +76,13 @@ namespace SCC
         public static IEnumerable<int> TopFiveSCCSize(DirectedGraph<int> graph)
         {
             var scc = FindSCC(graph);
-            return scc.Select(nodes => nodes.Count()).OrderByDescending(n => n).Take(5);
+            return scc.Select(p => p.Value.Leader).Distinct()
+                .Select(leader => GetMetadata(scc, leader).Followers.Count)
+                .OrderByDescending(n => n)
+                .Take(5);
         }
 
-        public static IEnumerable<IEnumerable<DirectedGraph<int>.Node>> FindSCC(DirectedGraph<int> graph)
+        public static Dictionary<int, NodeMetadata> FindSCC(DirectedGraph<int> graph)
         {
            
             // Transpose pass
@@ -90,11 +93,7 @@ namespace SCC
                     graph.Nodes.OrderByDescending(p => firstMetadata[p.Key].FinishingTime).Select(p => p.Value),
                     EdgeDirection.Forward);
 
-            var leaders = secondMetadata.Select(p => p.Value.Leader).Distinct();
-
-            return
-                leaders.Select(
-                    leader => secondMetadata.Where(pair => pair.Value.Leader == leader).Select(pair => pair.Value.Node));
+            return secondMetadata;
         }
 
         private static Dictionary<int, NodeMetadata> DFSLoop(IEnumerable<DirectedGraph<int>.Node> nodes, EdgeDirection direction)
@@ -121,23 +120,13 @@ namespace SCC
             var searchStack = new Stack<DirectedGraph<int>.Node>();
             searchStack.Push(leader);
 
+            var leaderMetadata = GetMetadata(metadata, leader);
             while (searchStack.Count > 0)
             {
                 var node = searchStack.Peek();
-                NodeMetadata nodeMetadata;
-                if (!metadata.ContainsKey(node.Name))
-                {
-                    nodeMetadata = new NodeMetadata()
-                    {
-                        Node = node
-                    };
-                    metadata.Add(node.Name, nodeMetadata);
-                }
-                else
-                {
-                    nodeMetadata = metadata[node.Name];
-                }
+                var nodeMetadata = GetMetadata(metadata, node);
                 nodeMetadata.Leader = leader;
+                leaderMetadata.Followers.Add(node);
 
                 var edges = direction == EdgeDirection.Forward
                     ? node.OutgoingEdges
@@ -164,6 +153,24 @@ namespace SCC
             }
             
             return finishingTime;
+        }
+
+        private static NodeMetadata GetMetadata(IDictionary<int, NodeMetadata> metadata, DirectedGraph<int>.Node node)
+        {
+            NodeMetadata nodeMetadata;
+            if (!metadata.ContainsKey(node.Name))
+            {
+                nodeMetadata = new NodeMetadata()
+                {
+                    Node = node
+                };
+                metadata.Add(node.Name, nodeMetadata);
+            }
+            else
+            {
+                nodeMetadata = metadata[node.Name];
+            }
+            return nodeMetadata;
         }
 
         public enum EdgeDirection { Forward, Backward }
