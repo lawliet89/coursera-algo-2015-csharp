@@ -10,7 +10,7 @@ namespace Utilities.Graphs
         public Dictionary<string, Vertex> Vertices { get; private set; }
         public List<Edge> Edges { get; private set; }
 
-        private UndirectedGraph()
+        public UndirectedGraph()
         {
             Vertices = new Dictionary<string, Vertex>();
             Edges = new List<Edge>();
@@ -107,6 +107,8 @@ namespace Utilities.Graphs
             public Vertex Left { get; set; }
             public Vertex Right { get; set; }
 
+            public int Length { get; set; }
+
             public Edge(Vertex a, Vertex b)
             {
                 Left = a;
@@ -126,6 +128,11 @@ namespace Utilities.Graphs
             public string Name { get; set; }
             public List<Edge> Edges { get; }
             public List<Vertex> SuperVertices { get; set; }
+
+            public IEnumerable<Vertex> Neighbours
+            {
+                get { return Edges.Select(e => e.Left == this ? e.Right : e.Left); }
+            }
 
             public Vertex(string name)
             {

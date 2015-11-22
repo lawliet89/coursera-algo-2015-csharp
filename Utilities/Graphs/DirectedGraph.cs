@@ -45,11 +45,13 @@ namespace Utilities.Graphs
         {
             public Node Tail { get; }
             public Node Head { get; }
+            public int Length { get; }
 
-            public Edge(Node tail, Node head)
+            public Edge(Node tail, Node head, int length = 1)
             {
                 Tail = tail;
                 Head = head;
+                Length = length;
             }
         }
     }
