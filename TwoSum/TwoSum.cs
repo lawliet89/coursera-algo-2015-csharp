@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Utilities;
@@ -23,30 +24,33 @@ namespace TwoSum
                 .ToDictionary(v => v, v => v));
         }
 
-        public static IEnumerable<long> TargetValues(SortedDictionary<long, long> data, long lowerBound, long upperBound)
+        public static IEnumerable<int> TargetValues(SortedDictionary<long, long> data, int lowerBound, int upperBound)
         {
             if (upperBound <= lowerBound)
                 throw new ArgumentException("Lower bound must be strictly smaller than upper bound");
             var smallest = data.First().Value;
             var largest = data.Last().Value;
-            var result = new HashSet<long>();
+            var result = new ConcurrentBag<int>();
+
+            var range = Enumerable.Range(lowerBound, upperBound - lowerBound).ToList();
             foreach (var a in data.Keys)
             {
-                for (var target = lowerBound; target <= upperBound; ++target)
-                {
-                    var b = target - a;
-                    if (b > largest || b < smallest)
+                var query = range.AsParallel()
+                    .Where(target =>
                     {
-                        continue;
-                    }
-                    if (b != a && data.ContainsKey(b))
+                        var b = target - a;
+                        return b <= largest && b >= smallest;
+                    })
+                    .Where(target =>
                     {
-                        result.Add(target);
-                    }
-                }
+                        var b = target - a;
+                        return b != a && data.ContainsKey(b);
+                    });
+                query.ForAll(target => result.Add(target));
+                
             }
 
-            return result;
+            return result.Distinct();
         } 
     }
 }
