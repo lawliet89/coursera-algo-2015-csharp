@@ -23,19 +23,25 @@ namespace TwoSum
                 .ToDictionary(v => v, v => v));
         }
 
-        public static IEnumerable<long> TargetValues(IDictionary<long, long> data, long lowerBound, long upperBound)
+        public static IEnumerable<long> TargetValues(SortedDictionary<long, long> data, long lowerBound, long upperBound)
         {
             if (upperBound <= lowerBound)
                 throw new ArgumentException("Lower bound must be strictly smaller than upper bound");
-            var result = new List<long>();
+            var smallest = data.First().Value;
+            var largest = data.Last().Value;
+            var result = new HashSet<long>();
             foreach (var a in data.Keys)
             {
-                for (var i = lowerBound; i <= upperBound; ++i)
+                for (var target = lowerBound; target <= upperBound; ++target)
                 {
-                    var target = lowerBound - a;
-                    if (target != a && data.ContainsKey(target))
+                    var b = target - a;
+                    if (b > largest || b < smallest)
                     {
-                        result.Add(i);
+                        continue;
+                    }
+                    if (b != a && data.ContainsKey(b))
+                    {
+                        result.Add(target);
                     }
                 }
             }
