@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Utilities;
+using Enumerable = Utilities.Enumerable;
 
 namespace TwoSum
 {
@@ -29,24 +31,22 @@ namespace TwoSum
                 throw new ArgumentException("Lower bound must be strictly smaller than upper bound");
             var smallest = data.First().Value;
             var largest = data.Last().Value;
-            var result = new HashSet<long>();
+            var result = new ConcurrentBag<long>();
+
+            var range = Enumerable.Range(lowerBound, upperBound - lowerBound + 1);
             foreach (var a in data.Keys)
             {
-                for (var target = lowerBound; target <= upperBound; ++target)
-                {
-                    var b = target - a;
-                    if (b > largest || b < smallest)
+                var query = range.AsParallel()
+                    .Where(target =>
                     {
-                        continue;
-                    }
-                    if (b != a && data.ContainsKey(b))
-                    {
-                        result.Add(target);
-                    }
-                }
+                        var b = target - a;
+                        return b <= largest && b >= smallest && b != a && data.ContainsKey(b);
+                    });
+                query.ForAll(target => result.Add(target));
+                
             }
 
-            return result;
+            return result.Distinct();
         } 
     }
 }
