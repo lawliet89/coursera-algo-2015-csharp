@@ -13,7 +13,7 @@ namespace TwoSum
         {
             var data = ReadInput($"{AppDomain.CurrentDomain.BaseDirectory}/../../../Blobs/TwoSum.txt");
             var targets = TargetValues(data, -10000, 10000);
-            Console.WriteLine("Answer: {0}", targets.Count());
+            Console.WriteLine("Answer: {0}", targets.Count()); // 427
             Console.WriteLine("Press ENTER to exit.");
             Console.ReadLine();
         }
