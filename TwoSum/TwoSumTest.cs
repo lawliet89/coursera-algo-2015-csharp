@@ -20,7 +20,7 @@ namespace TwoSum
         [TestCase("100", Result = 42)]
         [TestCase("1000", Result = 486)]
         [TestCase("10000", Result = 496)]
-        [TestCase("100000", Result = 519)]
+//        [TestCase("100000", Result = 519)]
         public int CorrectNumberOfTargetsForBlobFixtures(string filename)
         {
             var dictionary =

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Utilities;
+using Enumerable = Utilities.Enumerable;
 
 namespace TwoSum
 {
@@ -24,27 +25,22 @@ namespace TwoSum
                 .ToDictionary(v => v, v => v));
         }
 
-        public static IEnumerable<int> TargetValues(SortedDictionary<long, long> data, int lowerBound, int upperBound)
+        public static IEnumerable<long> TargetValues(SortedDictionary<long, long> data, long lowerBound, long upperBound)
         {
             if (upperBound <= lowerBound)
                 throw new ArgumentException("Lower bound must be strictly smaller than upper bound");
             var smallest = data.First().Value;
             var largest = data.Last().Value;
-            var result = new ConcurrentBag<int>();
+            var result = new ConcurrentBag<long>();
 
-            var range = Enumerable.Range(lowerBound, upperBound - lowerBound).ToList();
+            var range = Enumerable.Range(lowerBound, upperBound - lowerBound + 1);
             foreach (var a in data.Keys)
             {
                 var query = range.AsParallel()
                     .Where(target =>
                     {
                         var b = target - a;
-                        return b <= largest && b >= smallest;
-                    })
-                    .Where(target =>
-                    {
-                        var b = target - a;
-                        return b != a && data.ContainsKey(b);
+                        return b <= largest && b >= smallest && b != a && data.ContainsKey(b);
                     });
                 query.ForAll(target => result.Add(target));
                 
